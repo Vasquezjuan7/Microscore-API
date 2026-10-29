@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from 'typeorm';
 import { Credito } from '../../creditos/entities/credito.entity';
 
 @Entity('clientes')
@@ -9,11 +9,14 @@ export class Cliente {
   @Column()
   nombre: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column('int')
   edad: number;
+
+  @CreateDateColumn()
+  fecha_registro: Date;
 
   @OneToMany(() => Credito, (credito) => credito.cliente)
   creditos: Credito[];

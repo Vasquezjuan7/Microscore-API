@@ -9,9 +9,11 @@ import { Credito } from './creditos/entities/credito.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'microscore.sqlite',
+      database: process.env.DB_PATH ?? 'microscore.sqlite',
       entities: [Cliente, Credito],
-      synchronize: true, // solo para desarrollo
+      // Crea/actualiza las tablas a partir de los entities. Útil en desarrollo;
+      // en producción se reemplazaría por migraciones.
+      synchronize: process.env.NODE_ENV !== 'production',
     }),
     ClientesModule,
     CreditosModule,

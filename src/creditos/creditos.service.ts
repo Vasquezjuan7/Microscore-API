@@ -1,45 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { SolicitudDto } from './dto/solicitud.dto';
 import { SolicitudBuilder } from './builders/solicitud.builder';
 import { MotorScoringService } from './motor-scoring.service';
+import { Credito } from './entities/credito.entity';
+import { ClientesService } from '../clientes/clientes.service';
 
 @Injectable()
 export class CreditosService {
-  constructor(private readonly motorScoring: MotorScoringService) {}
+  constructor(
+    @InjectRepository(Credito)
+    private readonly creditosRepo: Repository<Credito>,
+    private readonly clientesService: ClientesService,
+    private readonly motorScoring: MotorScoringService,
+  ) {}
 
-  crearSolicitud(dto: SolicitudDto) {
-    // TODO: Integrar con base de datos real más adelante
-    const builder = new SolicitudBuilder();
-    const solicitud = builder
+  async crearSolicitud(dto: SolicitudDto): Promise<Credito> {
+    // Lanza 404 si el cliente no existe
+    await this.clientesService.findOne(dto.idCliente);
+
+    const solicitud = new SolicitudBuilder()
       .setClienteId(dto.idCliente)
       .setMonto(dto.monto)
       .setProposito(dto.proposito)
       .setIngresos(dto.ingresos)
       .build();
 
-    return {
-      message: 'Solicitud creada en memoria (Avance)',
-      data: solicitud
-    };
+    return this.creditosRepo.save(solicitud);
   }
 
-  evaluarCredito(id: string) {
-    // TODO: Obtener solicitud de la base de datos cuando esté conectada
-    // Simulamos un DTO para probar el motor por ahora
-    const mockDto: SolicitudDto = {
-      idCliente: '123',
-      monto: 1000,
-      proposito: 'negocio',
-      ingresos: 1500,
-      estado: 'PENDIENTE'
-    };
+  findAll(): Promise<Credito[]> {
+    return this.creditosRepo.find();
+  }
 
-    const resultado = this.motorScoring.evaluarSolicitud(mockDto);
-    
-    return {
-      idSolicitud: id,
-      estadoFinal: resultado,
-      nota: 'Evaluación simulada (Avance)'
-    };
+  async findOne(id: string): Promise<Credito> {
+    const credito = await this.creditosRepo.findOne({
+      where: { id_solicitud: id },
+      // El historial del cliente lo usa EstrategiaHistorial
+      relations: { cliente: { creditos: true } },
+    });
+    if (!credito) throw new NotFoundException(`Solicitud ${id} no encontrada`);
+    return credito;
+  }
+
+  async evaluarCredito(id: string): Promise<Credito> {
+    const credito = await this.findOne(id);
+    if (credito.estado !== 'PENDIENTE') {
+      throw new ConflictException(`La solicitud ya fue evaluada (${credito.estado})`);
+    }
+
+    const { puntaje, estado } = this.motorScoring.evaluarSolicitud(credito);
+    await this.creditosRepo.update(id, { puntaje, estado });
+    return { ...credito, puntaje, estado };
   }
 }

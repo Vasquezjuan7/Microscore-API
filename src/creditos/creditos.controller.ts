@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, ParseUUIDPipe, HttpCode } from '@nestjs/common';
 import { CreditosService } from './creditos.service';
 import { SolicitudDto } from './dto/solicitud.dto';
 
@@ -11,8 +11,19 @@ export class CreditosController {
     return this.creditosService.crearSolicitud(dto);
   }
 
-  @Get(':id/evaluar')
-  evaluarCredito(@Param('id') id: string) {
+  @Get()
+  findAll() {
+    return this.creditosService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.creditosService.findOne(id);
+  }
+
+  @Post(':id/evaluar')
+  @HttpCode(200)
+  evaluarCredito(@Param('id', ParseUUIDPipe) id: string) {
     return this.creditosService.evaluarCredito(id);
   }
 }

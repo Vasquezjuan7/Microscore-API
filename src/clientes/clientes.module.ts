@@ -8,6 +8,6 @@ import { Cliente } from './entities/cliente.entity';
   imports: [TypeOrmModule.forFeature([Cliente])],
   controllers: [ClientesController],
   providers: [ClientesService],
-  exports: [TypeOrmModule], // Exporta para que CreditosModule acceda al repo de Cliente
+  exports: [ClientesService], // CreditosModule lo usa para validar que el cliente existe
 })
 export class ClientesModule {}
