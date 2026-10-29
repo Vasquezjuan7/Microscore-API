@@ -1,11 +1,7 @@
-import { IsString, IsNumber, Min, IsOptional } from 'class-validator';
+import { IsString, IsNumber, Min, IsUUID, IsNotEmpty } from 'class-validator';
 
 export class SolicitudDto {
-  @IsOptional()
-  @IsString()
-  idSolicitud?: string;
-
-  @IsString()
+  @IsUUID()
   idCliente: string;
 
   @IsNumber()
@@ -13,13 +9,11 @@ export class SolicitudDto {
   monto: number;
 
   @IsString()
+  @IsNotEmpty()
   proposito: string;
 
+  // Ingresos mensuales
   @IsNumber()
   @Min(0)
   ingresos: number;
-
-  @IsOptional()
-  @IsString()
-  estado?: string;
 }
