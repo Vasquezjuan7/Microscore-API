@@ -1,27 +1,24 @@
-import { Injectable } from '@nestjs/common';
-import { IEstrategiaEvaluacion } from './strategies/estrategia-evaluacion.interface';
-import { SolicitudDto } from './dto/solicitud.dto';
-import { EstrategiaIngresos } from './strategies/estrategia-ingresos';
-import { EstrategiaProposito } from './strategies/estrategia-proposito';
-// TODO: Desarrollar e importar más estrategias (ej. Historial)
+import { Inject, Injectable } from '@nestjs/common';
+import { ESTRATEGIAS_EVALUACION, IEstrategiaEvaluacion } from './strategies/estrategia-evaluacion.interface';
+import { Credito, EstadoCredito } from './entities/credito.entity';
+
+export const PUNTAJE_MINIMO_APROBACION = 60;
+
+export interface ResultadoEvaluacion {
+  puntaje: number;
+  estado: EstadoCredito;
+}
 
 @Injectable()
 export class MotorScoringService {
-  private estrategias: IEstrategiaEvaluacion[] = [];
+  constructor(
+    @Inject(ESTRATEGIAS_EVALUACION)
+    private readonly estrategias: IEstrategiaEvaluacion[],
+  ) {}
 
-  constructor() {
-    // Solo cargamos un par de estrategias como avance preliminar
-    this.estrategias.push(new EstrategiaIngresos());
-    this.estrategias.push(new EstrategiaProposito());
-  }
-
-  evaluarSolicitud(solicitud: SolicitudDto): string {
-    let puntaje = 0;
-    for (const est of this.estrategias) {
-      puntaje += est.evaluar(solicitud);
-    }
-    
-    // Regla temporal para pruebas de desarrollo
-    return puntaje >= 30 ? 'APROBADO_PRELIMINAR' : 'RECHAZADO_PRELIMINAR';
+  evaluarSolicitud(solicitud: Credito): ResultadoEvaluacion {
+    const puntaje = this.estrategias.reduce((total, est) => total + est.evaluar(solicitud), 0);
+    const estado = puntaje >= PUNTAJE_MINIMO_APROBACION ? 'APROBADO' : 'RECHAZADO';
+    return { puntaje, estado };
   }
 }
