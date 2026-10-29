@@ -1,11 +1,8 @@
-import { IsString, IsEmail, IsInt, Min, IsOptional } from 'class-validator';
+import { IsString, IsEmail, IsInt, Min, IsNotEmpty } from 'class-validator';
 
 export class ClienteDto {
-  @IsOptional()
   @IsString()
-  idCliente?: string;
-
-  @IsString()
+  @IsNotEmpty()
   nombre: string;
 
   @IsEmail()

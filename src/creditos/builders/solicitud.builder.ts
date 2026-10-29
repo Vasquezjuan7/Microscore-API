@@ -16,24 +16,32 @@ export class SolicitudBuilder {
   }
 
   setMonto(monto: number): this {
-    if (monto <= 0) throw new BadRequestException('El monto debe ser mayor a cero');
+    if (!Number.isFinite(monto) || monto <= 0) {
+      throw new BadRequestException('El monto debe ser mayor a cero');
+    }
     this.solicitud.monto = monto;
     return this;
   }
 
   setProposito(proposito: string): this {
-    if (!proposito) throw new BadRequestException('El propósito es requerido');
-    this.solicitud.proposito = proposito;
+    if (!proposito?.trim()) throw new BadRequestException('El propósito es requerido');
+    this.solicitud.proposito = proposito.trim();
     return this;
   }
 
   setIngresos(ingresos: number): this {
-    if (ingresos < 0) throw new BadRequestException('Los ingresos no pueden ser negativos');
+    if (!Number.isFinite(ingresos) || ingresos < 0) {
+      throw new BadRequestException('Los ingresos no pueden ser negativos');
+    }
     this.solicitud.ingresos = ingresos;
     return this;
   }
 
   build(): Credito {
+    const { id_cliente, monto, proposito, ingresos } = this.solicitud;
+    if (id_cliente === undefined || monto === undefined || proposito === undefined || ingresos === undefined) {
+      throw new BadRequestException('La solicitud está incompleta');
+    }
     return this.solicitud;
   }
 }
