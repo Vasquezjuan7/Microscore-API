@@ -79,6 +79,13 @@ describe('ClientesService', () => {
       repo.findOne.mockResolvedValue(null);
       await expect(service.update(ID, dto)).rejects.toThrow(NotFoundException);
     });
+
+    it('actualiza solo los campos enviados (PATCH)', async () => {
+      repo.findOne.mockResolvedValue(crearCliente());
+      const resultado = await service.update(ID, { edad: 31 });
+      expect(resultado).toMatchObject({ nombre: 'Ana', email: 'ana@correo.com', edad: 31 });
+      expect(repo.exists).not.toHaveBeenCalled();
+    });
   });
 
   describe('remove', () => {
