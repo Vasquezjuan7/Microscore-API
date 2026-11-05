@@ -1,5 +1,8 @@
 # Finales de línea LF en el repositorio (evita problemas en Docker/Linux)
 * text=auto eol=lf
+# El HTML y CSS del panel de pruebas no cuentan en las estadísticas de lenguajes de GitHub
+public/*.html linguist-vendored
+public/*.css linguist-vendored
 *.png binary
 *.jpg binary
 *.ico binary
