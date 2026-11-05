@@ -30,4 +30,4 @@ Un commit por cambio logico: la funcionalidad, sus pruebas y su documentacion va
 
 - Base siempre `develop`.
 - Usar la plantilla de `.github/pull_request_template.md`.
-- Antes de abrirlo: `npm run lint`, `npm run build` y `npm test` deben pasar.
+- Antes de abrirlo: `npm run lint`, `npm run build`, `npm test` y `npm run test:e2e` deben pasar.
