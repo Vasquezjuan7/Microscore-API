@@ -1,7 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, Index } from 'typeorm';
 import { Cliente } from '../../clientes/entities/cliente.entity';
+import { ESTADOS_CREDITO } from '../../common/constantes';
 
-export type EstadoCredito = 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
+export type EstadoCredito = (typeof ESTADOS_CREDITO)[number];
 
 // Algunos drivers devuelven los decimales como string; esto los convierte a number al leer.
 const decimalANumero = {

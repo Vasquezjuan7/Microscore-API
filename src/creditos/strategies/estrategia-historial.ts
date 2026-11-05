@@ -1,7 +1,8 @@
 import { IEstrategiaEvaluacion } from './estrategia-evaluacion.interface';
 import { Credito } from '../entities/credito.entity';
+import { PUNTOS_HISTORIAL_APROBADO } from '../../common/constantes';
 
-// Premia a clientes con créditos aprobados previamente en MicroScore (máx. 20 puntos).
+// Premia a clientes con créditos aprobados previamente en MicroScore.
 // No penaliza a clientes nuevos: el sistema está pensado para personas sin historial bancario.
 export class EstrategiaHistorial implements IEstrategiaEvaluacion {
   evaluar(solicitud: Credito): number {
@@ -9,6 +10,6 @@ export class EstrategiaHistorial implements IEstrategiaEvaluacion {
     const aprobados = creditosPrevios.filter(
       (c) => c.id_solicitud !== solicitud.id_solicitud && c.estado === 'APROBADO',
     );
-    return aprobados.length > 0 ? 20 : 0;
+    return aprobados.length > 0 ? PUNTOS_HISTORIAL_APROBADO : 0;
   }
 }
