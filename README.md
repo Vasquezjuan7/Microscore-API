@@ -4,7 +4,7 @@ Sistema de evaluación de microcréditos para emprendedores sin historial bancar
 
 ## Arquitectura y Tecnologías
 
-Proyecto **100% TypeScript** sobre Node.js, en **NestJS** con arquitectura modular por características, **TypeORM** y **SQLite**.
+Proyecto **100% TypeScript** sobre Node.js, con arquitectura modular por características, **TypeORM** y **SQLite**.
 
 1. **ClientesModule (`src/clientes`)**: CRUD de clientes persistido en base de datos.
 2. **CreditosModule (`src/creditos`)**: solicitud y evaluación de créditos. Usa dos patrones de diseño:
