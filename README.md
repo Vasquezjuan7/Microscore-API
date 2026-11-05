@@ -123,6 +123,7 @@ npm install
 npm run start:dev     # desarrollo con recarga: http://localhost:3000/v1
 npm test              # tests unitarios (servicios, DTOs, estrategias, filtros e interceptores)
 npm run test:cov      # tests con reporte de cobertura en coverage/
+npm run test:e2e      # pruebas e2e de la API completa sobre SQLite en memoria (carpeta test/)
 npm run seed          # carga clientes y créditos de ejemplo (no duplica si ya existen)
 npm run lint          # revisa el código con oxlint (src/, web/ y test/)
 npm run format        # formatea el código con Prettier
