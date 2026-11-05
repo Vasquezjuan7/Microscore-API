@@ -47,6 +47,12 @@ export class CreditosService {
     return this.creditosRepo.find();
   }
 
+  // Historial de solicitudes de un cliente, de la más reciente a la más antigua
+  async findByCliente(idCliente: string): Promise<Credito[]> {
+    await this.clientesService.findOne(idCliente); // 404 si el cliente no existe
+    return this.creditosRepo.find({ where: { id_cliente: idCliente }, order: { fecha_solicitud: 'DESC' } });
+  }
+
   async findOne(id: string): Promise<Credito> {
     const credito = await this.creditosRepo.findOne({
       where: { id_solicitud: id },
