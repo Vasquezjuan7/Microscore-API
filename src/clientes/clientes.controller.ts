@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, ParseUUIDPipe, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Patch, Param, Delete, ParseUUIDPipe, HttpCode } from '@nestjs/common';
 import { ClientesService } from './clientes.service';
-import { ClienteDto } from './dto/cliente.dto';
+import { ActualizarClienteDto, ClienteDto } from './dto/cliente.dto';
 
 @Controller('clientes')
 export class ClientesController {
@@ -23,6 +23,12 @@ export class ClientesController {
 
   @Put(':id')
   update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: ClienteDto) {
+    return this.clientesService.update(id, dto);
+  }
+
+  // Actualiza solo los campos enviados
+  @Patch(':id')
+  actualizarParcial(@Param('id', ParseUUIDPipe) id: string, @Body() dto: ActualizarClienteDto) {
     return this.clientesService.update(id, dto);
   }
 
