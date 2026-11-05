@@ -89,4 +89,18 @@ describe('CreditosService', () => {
       expect(repo.find).not.toHaveBeenCalled();
     });
   });
+
+  describe('findAll', () => {
+    it('lista todas las solicitudes ordenadas por fecha', async () => {
+      repo.find.mockResolvedValue([]);
+      await service.findAll();
+      expect(repo.find).toHaveBeenCalledWith({ where: {}, order: { fecha_solicitud: 'DESC' } });
+    });
+
+    it('filtra por estado', async () => {
+      repo.find.mockResolvedValue([]);
+      await service.findAll({ estado: 'APROBADO' });
+      expect(repo.find).toHaveBeenCalledWith({ where: { estado: 'APROBADO' }, order: { fecha_solicitud: 'DESC' } });
+    });
+  });
 });
