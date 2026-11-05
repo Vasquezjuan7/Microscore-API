@@ -245,3 +245,16 @@ button:disabled { opacity: 0.55; cursor: progress; }
   border-left: 4px solid var(--ok);
 }
 .toast.error { border-left-color: var(--bad); }
+
+/* Desglose del puntaje por criterio */
+.score { flex-wrap: wrap; }
+.desglose {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: 6px; width: 100%;
+}
+.desglose li {
+  font-size: 12px; padding: 3px 8px; border-radius: 999px;
+  background: var(--surface-2); color: var(--muted);
+}
+.desglose li.suma { background: var(--accent-soft); color: var(--accent); }
+.desglose li b { font-family: var(--mono); }
