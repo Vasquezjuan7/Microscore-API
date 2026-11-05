@@ -1,6 +1,6 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
-import { ClienteDto } from './cliente.dto';
+import { ActualizarClienteDto, ClienteDto } from './cliente.dto';
 
 async function errores(datos: object): Promise<string[]> {
   const dto = plainToInstance(ClienteDto, datos);
@@ -41,5 +41,20 @@ describe('ClienteDto', () => {
 
   it('rechaza una edad con decimales', async () => {
     expect(await errores({ ...valido, edad: 30.5 })).toContain('La edad debe ser un número entero');
+  });
+});
+
+describe('ActualizarClienteDto', () => {
+  async function erroresParcial(datos: object): Promise<string[]> {
+    const resultado = await validate(plainToInstance(ActualizarClienteDto, datos));
+    return resultado.flatMap((e) => Object.values(e.constraints ?? {}));
+  }
+
+  it('acepta un cuerpo con un solo campo', async () => {
+    expect(await erroresParcial({ edad: 40 })).toEqual([]);
+  });
+
+  it('valida los campos que sí se envían', async () => {
+    expect(await erroresParcial({ email: 'no-es-email' })).toContain('El email no es válido');
   });
 });
