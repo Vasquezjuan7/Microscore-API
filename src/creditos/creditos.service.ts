@@ -18,7 +18,12 @@ export class CreditosService {
 
   async crearSolicitud(dto: SolicitudDto): Promise<Credito> {
     // Lanza 404 si el cliente no existe
-    await this.clientesService.findOne(dto.idCliente);
+    const cliente = await this.clientesService.findOne(dto.idCliente);
+
+    // Evita acumular solicitudes: hay que evaluar la pendiente antes de pedir otra
+    if (cliente.creditos.some((c) => c.estado === 'PENDIENTE')) {
+      throw new ConflictException('El cliente ya tiene una solicitud pendiente de evaluación');
+    }
 
     const solicitud = new SolicitudBuilder()
       .setClienteId(dto.idCliente)
@@ -51,7 +56,12 @@ export class CreditosService {
     }
 
     const { puntaje, estado } = this.motorScoring.evaluarSolicitud(credito);
-    await this.creditosRepo.update(id, { puntaje, estado });
-    return { ...credito, puntaje, estado };
+    // Solo actualiza si sigue PENDIENTE: si otra petición la evaluó entre medias, no se pisa
+    const resultado = await this.creditosRepo.update({ id_solicitud: id, estado: 'PENDIENTE' }, { puntaje, estado });
+    if (!resultado.affected) {
+      throw new ConflictException('La solicitud ya fue evaluada por otra petición');
+    }
+    // Se relee para que la respuesta (incluido el historial del cliente) refleje el estado guardado
+    return this.findOne(id);
   }
 }
