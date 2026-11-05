@@ -2,7 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ESTRATEGIAS_EVALUACION, IEstrategiaEvaluacion } from './strategies/estrategia-evaluacion.interface';
 import { Credito, EstadoCredito } from './entities/credito.entity';
 
-export const PUNTAJE_MINIMO_APROBACION = 60;
+import { PUNTAJE_MINIMO_APROBACION } from '../common/constantes';
+
+// Se reexporta para no romper los imports existentes
+export { PUNTAJE_MINIMO_APROBACION };
 
 export interface ResultadoEvaluacion {
   puntaje: number;
