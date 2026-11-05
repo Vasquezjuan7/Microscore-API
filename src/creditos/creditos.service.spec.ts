@@ -1,4 +1,4 @@
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { QueryFailedError, Repository } from 'typeorm';
 import { CreditosService } from './creditos.service';
 import { MotorScoringService } from './motor-scoring.service';
@@ -72,5 +72,21 @@ describe('CreditosService', () => {
     repo.findOne.mockResolvedValue(Object.assign(new Credito(), { id_solicitud: ID_SOLICITUD, estado: 'PENDIENTE' }));
     repo.update.mockResolvedValue({ affected: 0, raw: [], generatedMaps: [] });
     await expect(service.evaluarCredito(ID_SOLICITUD)).rejects.toThrow(ConflictException);
+  });
+
+  describe('findByCliente', () => {
+    it('devuelve las solicitudes del cliente de la más reciente a la más antigua', async () => {
+      clientes.findOne.mockResolvedValue(crearCliente());
+      const creditos = [Object.assign(new Credito(), { id_cliente: ID_CLIENTE })];
+      repo.find.mockResolvedValue(creditos);
+      await expect(service.findByCliente(ID_CLIENTE)).resolves.toBe(creditos);
+      expect(repo.find).toHaveBeenCalledWith({ where: { id_cliente: ID_CLIENTE }, order: { fecha_solicitud: 'DESC' } });
+    });
+
+    it('lanza 404 si el cliente no existe', async () => {
+      clientes.findOne.mockRejectedValue(new NotFoundException());
+      await expect(service.findByCliente(ID_CLIENTE)).rejects.toThrow(NotFoundException);
+      expect(repo.find).not.toHaveBeenCalled();
+    });
   });
 });
