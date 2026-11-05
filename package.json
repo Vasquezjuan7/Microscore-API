@@ -14,6 +14,7 @@
     "prestart:debug": "npm run build:web",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "seed": "nest build && node dist/seed",
     "lint": "oxlint src/ web/ test/",
     "test": "jest",
     "test:watch": "jest --watch",
