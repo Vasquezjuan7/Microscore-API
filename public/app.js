@@ -52,8 +52,12 @@ async function api(metodo, ruta, cuerpo) {
     });
     status = res.status;
     const texto = await res.text();
-    datos = texto ? JSON.parse(texto) : null;
     marcarConexion(true);
+    try {
+      datos = texto ? JSON.parse(texto) : null;
+    } catch {
+      datos = { message: `Respuesta no válida del servidor (HTTP ${status})` };
+    }
   } catch (e) {
     datos = { message: 'No se pudo conectar con la API. ¿Está el servidor encendido?' };
     marcarConexion(false);
