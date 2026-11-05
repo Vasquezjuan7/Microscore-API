@@ -60,6 +60,9 @@ Dockerfile · docker-compose.yml  # Contenerización
 
 Se aprueba con **60 puntos o más**. Ningún criterio aprueba un crédito por sí solo.
 
+Los puntajes, tramos y el umbral están definidos en `src/common/constantes.ts`: para ajustar una regla
+basta con cambiar el valor ahí.
+
 ## Endpoints (prefijo `/v1`)
 
 | Método | Ruta                      | Descripción                                   |
