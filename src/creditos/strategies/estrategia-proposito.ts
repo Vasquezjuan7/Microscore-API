@@ -9,6 +9,8 @@ function normalizar(texto: string | undefined): string {
 
 // Se favorecen los créditos con fines productivos
 export class EstrategiaProposito implements IEstrategiaEvaluacion {
+  readonly nombre = 'proposito';
+
   evaluar(solicitud: Credito): number {
     return PROPOSITOS_PRODUCTIVOS.includes(normalizar(solicitud.proposito)) ? PUNTOS_PROPOSITO_PRODUCTIVO : 0;
   }
