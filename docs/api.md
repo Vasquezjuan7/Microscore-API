@@ -40,3 +40,49 @@ panel web (`/`) y la documentación Swagger (`/docs`). Los cuerpos son JSON (`Co
 | Créditos | GET    | `/creditos/{id}`            | Consulta una solicitud                        |
 | Créditos | POST   | `/creditos/{id}/evaluar`    | Evalúa la solicitud con el motor de scoring   |
 | Health   | GET    | `/health`                   | Estado de la API y de la base de datos        |
+
+## Clientes
+
+### POST /clientes
+
+| Campo    | Tipo   | Reglas                                        |
+|----------|--------|-----------------------------------------------|
+| `nombre` | string | Obligatorio, máximo 100 caracteres (se recorta) |
+| `email`  | string | Email válido, único, máximo 150 (se guarda en minúsculas) |
+| `edad`   | entero | Entre 18 y 120                                |
+
+```bash
+curl -X POST localhost:3000/v1/clientes -H 'Content-Type: application/json' \
+  -d '{"nombre":"Ana Gómez","email":"ana@correo.com","edad":30}'
+```
+
+Respuesta `201`:
+
+```json
+{
+  "nombre": "Ana Gómez",
+  "email": "ana@correo.com",
+  "edad": 30,
+  "id_cliente": "21e085a0-faac-4bdb-914b-76cc5096299c",
+  "fecha_registro": "2026-11-05T15:48:43.512Z"
+}
+```
+
+Errores: `400` datos inválidos, `409` email ya registrado.
+
+### GET /clientes/{id}
+
+Devuelve el cliente con el arreglo `creditos`. `404` si no existe.
+
+### PUT /clientes/{id} y PATCH /clientes/{id}
+
+`PUT` exige los tres campos; `PATCH` acepta cualquier subconjunto (por ejemplo `{"edad":31}`). Ambos validan
+los campos enviados y responden `409` si el nuevo email ya lo usa otro cliente.
+
+### DELETE /clientes/{id}
+
+Responde `204`. Si el cliente tiene créditos registrados responde `409` y no se elimina.
+
+### GET /clientes/{id}/creditos
+
+Solicitudes del cliente ordenadas de la más reciente a la más antigua. `404` si el cliente no existe.
