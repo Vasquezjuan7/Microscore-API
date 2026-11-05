@@ -7,8 +7,10 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
-COPY tsconfig.json tsconfig.build.json nest-cli.json ./
+COPY tsconfig.json tsconfig.build.json tsconfig.web.json nest-cli.json ./
 COPY src ./src
+COPY web ./web
+COPY public ./public
 RUN npm run build \
  && npm prune --omit=dev
 
@@ -22,7 +24,7 @@ WORKDIR /app
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/dist ./dist
 COPY --chown=node:node package.json ./
-COPY --chown=node:node public ./public
+COPY --from=build --chown=node:node /app/public ./public
 
 # Carpeta para la base SQLite (se monta como volumen para no perder datos)
 RUN mkdir -p /app/data && chown node:node /app/data
