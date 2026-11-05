@@ -1,4 +1,4 @@
-# MicroScore API (En Desarrollo)
+# MicroScore API
 
 Sistema de evaluación de microcréditos para emprendedores sin historial bancario.
 
@@ -14,6 +14,38 @@ Proyecto en **NestJS** con arquitectura modular por características, **TypeORM*
      añadir una regla nueva basta con crear la clase y agregarla a esa lista.
 3. **Base de datos**: las tablas `clientes` y `creditos` se crean automáticamente a partir de los
    entities (`synchronize`) en el archivo `microscore.sqlite`.
+
+## Estructura del proyecto
+
+```
+src/
+├── main.ts                      # Punto de entrada: ValidationPipe, prefijo /v1 y panel web
+├── app.module.ts                # Módulo raíz: TypeORM (SQLite), ClientesModule y CreditosModule
+├── health/
+│   └── health.controller.ts     # GET /v1/health (lo usa el HEALTHCHECK de Docker)
+├── clientes/
+│   ├── clientes.module.ts
+│   ├── clientes.controller.ts   # CRUD de clientes (/v1/clientes)
+│   ├── clientes.service.ts      # Lógica de clientes persistida con TypeORM (email único)
+│   ├── dto/cliente.dto.ts       # Validaciones: nombre, email, edad ≥ 18
+│   └── entities/cliente.entity.ts
+└── creditos/
+    ├── creditos.module.ts       # Registra las estrategias de scoring
+    ├── creditos.controller.ts   # Solicitud y evaluación (/v1/creditos)
+    ├── creditos.service.ts      # Orquesta el Builder y el motor de scoring
+    ├── motor-scoring.service.ts # Suma los puntos de cada estrategia y decide (≥ 60 aprueba)
+    ├── builders/
+    │   └── solicitud.builder.ts # Patrón Builder: construye y valida la solicitud
+    ├── strategies/              # Patrón Strategy: una clase por regla de evaluación
+    │   ├── estrategia-evaluacion.interface.ts  # evaluar(solicitud): number
+    │   ├── estrategia-ingresos.ts   # Ingresos ≥ 50% del monto: 50 pts · ≥ 25%: 25 pts
+    │   ├── estrategia-proposito.ts  # Negocio/educación/emprendimiento/inversión: 30 pts
+    │   └── estrategia-historial.ts  # Crédito previo aprobado: 20 pts
+    ├── dto/solicitud.dto.ts     # Validaciones: UUID, monto ≥ 1, máx. 2 decimales
+    └── entities/credito.entity.ts   # Índice único: una sola solicitud PENDIENTE por cliente
+public/                          # Panel web de pruebas (HTML/CSS/JS sin dependencias)
+Dockerfile · docker-compose.yml  # Contenerización
+```
 
 ## Reglas de scoring
 
@@ -38,6 +70,7 @@ Se aprueba con **60 puntos o más**. Ningún criterio aprueba un crédito por s�
 | GET    | `/creditos`               | Listar solicitudes                            |
 | GET    | `/creditos/:id`           | Ver solicitud                                 |
 | POST   | `/creditos/:id/evaluar`   | Evaluar solicitud → `APROBADO` / `RECHAZADO`  |
+| GET    | `/health`                 | Estado de la API y de la base de datos        |
 
 Ejemplo:
 
@@ -56,12 +89,32 @@ curl -X POST localhost:3000/v1/creditos/<id_solicitud>/evaluar
 
 ## Instalación y Uso
 
+### Con Node.js (requiere Node 20 o superior)
+
 ```bash
 npm install
-npm run start:dev     # http://localhost:3000/v1
-npm test              # tests unitarios (motor de scoring y builder)
+npm run start:dev     # desarrollo con recarga: http://localhost:3000/v1
+npm test              # tests unitarios (motor de scoring, builder y servicio de créditos)
 npm run format        # formatea el código con Prettier
+
+# Producción
+npm run build
+npm run start:prod
 ```
+
+### Con Docker
+
+```bash
+docker compose up -d --build   # o: npm run docker:up
+docker compose logs -f api     # o: npm run docker:logs
+docker compose down            # o: npm run docker:down (los datos se conservan)
+docker compose down -v         # además borra el volumen con la base de datos
+```
+
+La API queda en **http://localhost:3000/v1** y el panel en **http://localhost:3000/**. La base SQLite se
+guarda en el volumen `microscore-data`, así que los datos sobreviven a reinicios del contenedor. La imagen
+es multi-etapa, corre con un usuario sin privilegios y tiene `HEALTHCHECK` contra `/v1/health`
+(`docker ps` muestra `healthy`). Para usar otro puerto en el host: `PORT=8080 docker compose up -d`.
 
 ### Panel web de pruebas
 
@@ -69,4 +122,20 @@ Con el servidor encendido, abre **http://localhost:3000/**. El panel (`public/`)
 eliminar clientes, solicitar y evaluar créditos, y muestra cada petición a la API con su código HTTP,
 tiempo y respuesta JSON. Lo sirve el propio NestJS, así que no necesita instalación ni CORS.
 
-Variables de entorno opcionales: `PORT` (por defecto 3000) y `DB_PATH` (por defecto `microscore.sqlite`).
+### Variables de entorno
+
+Ver `.env.example`.
+
+| Variable         | Por defecto          | Descripción                                             |
+|------------------|----------------------|---------------------------------------------------------|
+| `PORT`           | `3000`               | Puerto HTTP                                             |
+| `DB_PATH`        | `microscore.sqlite`  | Archivo de la base de datos SQLite                      |
+| `DB_SYNCHRONIZE` | `true`               | Crea/actualiza las tablas a partir de los entities      |
+
+## Flujo de trabajo con Git
+
+- `main`: versión estable; solo recibe merges desde `develop`.
+- `develop`: rama de integración.
+- `feature/*`, `fix/*`, `docs/*`: una rama por cambio, creada desde `develop` y fusionada con `--no-ff`.
+
+Los commits siguen [Conventional Commits](https://www.conventionalcommits.org/es/) (`feat:`, `fix:`, `docs:`…).
