@@ -123,6 +123,7 @@ npm install
 npm run start:dev     # desarrollo con recarga: http://localhost:3000/v1
 npm test              # tests unitarios (servicios, DTOs, estrategias, filtros e interceptores)
 npm run test:cov      # tests con reporte de cobertura en coverage/
+npm run seed          # carga clientes y créditos de ejemplo (no duplica si ya existen)
 npm run lint          # revisa el código con oxlint (src/, web/ y test/)
 npm run format        # formatea el código con Prettier
 
@@ -144,6 +145,18 @@ La API queda en **http://localhost:3000/v1** y el panel en **http://localhost:30
 guarda en el volumen `microscore-data`, así que los datos sobreviven a reinicios del contenedor. La imagen
 es multi-etapa, corre con un usuario sin privilegios y tiene `HEALTHCHECK` contra `/v1/health`
 (`docker ps` muestra `healthy`). Para usar otro puerto en el host: `PORT=8080 docker compose up -d`.
+
+### Datos de ejemplo
+
+`npm run seed` crea tres clientes pensados para ver cada regla del scoring:
+
+| Cliente | Solicitudes | Resultado |
+|---|---|---|
+| Ana Gómez (`ana@microscore.dev`) | negocio e inversión con buenos ingresos | Aprobada (80) y aprobada con historial (100) |
+| Luis Pérez (`luis@microscore.dev`) | vacaciones con buenos ingresos | Rechazada (50) |
+| María Torres (`maria@microscore.dev`) | educación | Pendiente, para evaluarla desde el panel |
+
+Con Docker: `docker compose exec api node dist/seed`.
 
 ### Panel web de pruebas
 
