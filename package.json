@@ -16,6 +16,8 @@
     "start:prod": "node dist/main",
     "lint": "oxlint src/ web/ test/",
     "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
     "docker:up": "docker compose up -d --build",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f api"
@@ -59,6 +61,12 @@
     "transform": {
       "^.+\\.ts$": "ts-jest"
     },
+    "collectCoverageFrom": [
+      "**/*.ts",
+      "!**/*.spec.ts",
+      "!main.ts"
+    ],
+    "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   },
   "allowScripts": {
