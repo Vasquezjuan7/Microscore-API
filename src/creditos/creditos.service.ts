@@ -2,6 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryFailedError, Repository } from 'typeorm';
 import { SolicitudDto } from './dto/solicitud.dto';
+import { FiltroCreditosDto } from './dto/filtro-creditos.dto';
 import { SolicitudBuilder } from './builders/solicitud.builder';
 import { MotorScoringService } from './motor-scoring.service';
 import { Credito } from './entities/credito.entity';
@@ -43,8 +44,11 @@ export class CreditosService {
     }
   }
 
-  findAll(): Promise<Credito[]> {
-    return this.creditosRepo.find();
+  findAll(filtro: FiltroCreditosDto = {}): Promise<Credito[]> {
+    return this.creditosRepo.find({
+      where: filtro.estado ? { estado: filtro.estado } : {},
+      order: { fecha_solicitud: 'DESC' },
+    });
   }
 
   // Historial de solicitudes de un cliente, de la más reciente a la más antigua

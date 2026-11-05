@@ -1,6 +1,7 @@
-import { Controller, Post, Get, Body, Param, ParseUUIDPipe, HttpCode } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, ParseUUIDPipe, HttpCode, Query } from '@nestjs/common';
 import { CreditosService } from './creditos.service';
 import { SolicitudDto } from './dto/solicitud.dto';
+import { FiltroCreditosDto } from './dto/filtro-creditos.dto';
 
 @Controller('creditos')
 export class CreditosController {
@@ -12,8 +13,8 @@ export class CreditosController {
   }
 
   @Get()
-  findAll() {
-    return this.creditosService.findAll();
+  findAll(@Query() filtro: FiltroCreditosDto) {
+    return this.creditosService.findAll(filtro);
   }
 
   @Get(':id')
