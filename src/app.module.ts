@@ -4,6 +4,7 @@ import { ClientesModule } from './clientes/clientes.module';
 import { CreditosModule } from './creditos/creditos.module';
 import { Cliente } from './clientes/entities/cliente.entity';
 import { Credito } from './creditos/entities/credito.entity';
+import { HealthController } from './health/health.controller';
 
 @Module({
   imports: [
@@ -18,5 +19,6 @@ import { Credito } from './creditos/entities/credito.entity';
     ClientesModule,
     CreditosModule,
   ],
+  controllers: [HealthController],
 })
 export class AppModule {}
