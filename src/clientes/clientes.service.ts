@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 import { ClienteDto } from './dto/cliente.dto';
 import { Cliente } from './entities/cliente.entity';
 
@@ -14,7 +14,7 @@ export class ClientesService {
   async create(dto: ClienteDto): Promise<Cliente> {
     await this.validarEmailDisponible(dto.email);
     const cliente = this.clientesRepo.create(dto);
-    return this.clientesRepo.save(cliente);
+    return this.guardar(cliente);
   }
 
   findAll(): Promise<Cliente[]> {
@@ -34,7 +34,20 @@ export class ClientesService {
     const cliente = await this.findOne(id);
     if (dto.email !== cliente.email) await this.validarEmailDisponible(dto.email);
     Object.assign(cliente, dto);
-    return this.clientesRepo.save(cliente);
+    return this.guardar(cliente);
+  }
+
+  // Si dos peticiones registran el mismo email a la vez, la restricción UNIQUE de la base
+  // de datos salta: se devuelve 409 en lugar de un 500.
+  private async guardar(cliente: Cliente): Promise<Cliente> {
+    try {
+      return await this.clientesRepo.save(cliente);
+    } catch (error) {
+      if (error instanceof QueryFailedError && /UNIQUE/i.test(error.message)) {
+        throw new ConflictException(`Ya existe un cliente con el email ${cliente.email}`);
+      }
+      throw error;
+    }
   }
 
   async remove(id: string): Promise<void> {

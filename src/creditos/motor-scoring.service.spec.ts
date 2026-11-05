@@ -37,6 +37,11 @@ describe('MotorScoringService', () => {
     expect(resultado).toEqual({ puntaje: 30, estado: 'RECHAZADO' });
   });
 
+  it.each(['Educación', 'INVERSIÓN', ' educacion '])('reconoce el propósito %p con o sin tilde', (proposito) => {
+    const resultado = motor.evaluarSolicitud(crearSolicitud({ ingresos: 600, proposito }));
+    expect(resultado).toEqual({ puntaje: 80, estado: 'APROBADO' });
+  });
+
   it('el historial aprobado compensa ingresos medios', () => {
     const solicitud = crearSolicitud({ ingresos: 300, proposito: 'negocio', cliente: clienteConCredito('APROBADO') });
     expect(motor.evaluarSolicitud(solicitud)).toEqual({ puntaje: 75, estado: 'APROBADO' });

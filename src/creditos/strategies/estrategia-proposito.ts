@@ -3,10 +3,18 @@ import { Credito } from '../entities/credito.entity';
 
 const PROPOSITOS_PRODUCTIVOS = ['negocio', 'educacion', 'emprendimiento', 'inversion'];
 
+// Pasa a minúsculas y quita tildes para que "Educación" y "educacion" cuenten igual
+function normalizar(texto: string | undefined): string {
+  return (texto ?? '')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '');
+}
+
 // Se favorecen los créditos con fines productivos (máx. 30 puntos)
 export class EstrategiaProposito implements IEstrategiaEvaluacion {
   evaluar(solicitud: Credito): number {
-    const proposito = solicitud.proposito?.trim().toLowerCase();
-    return PROPOSITOS_PRODUCTIVOS.includes(proposito) ? 30 : 0;
+    return PROPOSITOS_PRODUCTIVOS.includes(normalizar(solicitud.proposito)) ? 30 : 0;
   }
 }

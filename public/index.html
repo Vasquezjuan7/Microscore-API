@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MicroScore · Panel</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230f766e'/><path d='M8 22V10l8 7 8-7v12' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><path d="M8 22V10l8 7 8-7v12" /></svg>
+        </span>
+        <div>
+          <h1>MicroScore</h1>
+          <p>Evaluación de microcréditos para emprendedores</p>
+        </div>
+      </div>
+      <div class="status" id="status" data-state="checking">
+        <span class="dot"></span><span id="status-text">Conectando…</span>
+      </div>
+    </header>
+
+    <section class="stats" aria-label="Resumen">
+      <div class="stat"><span class="stat-label">Clientes</span><span class="stat-value" id="stat-clientes">–</span></div>
+      <div class="stat"><span class="stat-label">Solicitudes</span><span class="stat-value" id="stat-solicitudes">–</span></div>
+      <div class="stat"><span class="stat-label">Pendientes</span><span class="stat-value" id="stat-pendientes">–</span></div>
+      <div class="stat ok"><span class="stat-label">Aprobadas</span><span class="stat-value" id="stat-aprobadas">–</span></div>
+      <div class="stat bad"><span class="stat-label">Rechazadas</span><span class="stat-value" id="stat-rechazadas">–</span></div>
+    </section>
+
+    <main class="grid">
+      <!-- Clientes -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Clientes</h2>
+          <button class="ghost small" id="btn-refrescar" title="Recargar datos">↻ Recargar</button>
+        </div>
+
+        <form id="form-cliente" class="form" autocomplete="off">
+          <div class="form-title" id="form-cliente-title">Nuevo cliente</div>
+          <label>Nombre<input name="nombre" required placeholder="Ana Gómez" /></label>
+          <div class="row">
+            <label>Email<input name="email" type="email" required placeholder="ana@correo.com" /></label>
+            <label class="narrow">Edad<input name="edad" type="number" min="18" required placeholder="30" /></label>
+          </div>
+          <div class="actions">
+            <button type="button" class="ghost" id="btn-cancelar-edicion" hidden>Cancelar</button>
+            <button type="submit" class="primary" id="btn-guardar-cliente">Crear cliente</button>
+          </div>
+        </form>
+
+        <ul class="list" id="lista-clientes"></ul>
+      </section>
+
+      <!-- Créditos -->
+      <section class="panel">
+        <div class="panel-head"><h2>Créditos</h2></div>
+
+        <form id="form-credito" class="form" autocomplete="off">
+          <div class="form-title">Solicitar crédito</div>
+          <label>Cliente<select name="idCliente" required id="select-cliente"></select></label>
+          <div class="row">
+            <label>Monto<input name="monto" type="number" min="1" step="any" required placeholder="1000" /></label>
+            <label>Ingresos mensuales<input name="ingresos" type="number" min="0" step="any" required placeholder="600" /></label>
+          </div>
+          <label>Propósito
+            <input name="proposito" list="propositos" required placeholder="negocio, educación…" />
+            <datalist id="propositos">
+              <option value="negocio"></option>
+              <option value="educación"></option>
+              <option value="emprendimiento"></option>
+              <option value="inversión"></option>
+              <option value="vacaciones"></option>
+              <option value="consumo"></option>
+            </datalist>
+          </label>
+          <div class="hint" id="hint-ratio"></div>
+          <div class="actions">
+            <button type="submit" class="primary">Enviar solicitud</button>
+          </div>
+        </form>
+
+        <div class="filters" role="tablist">
+          <button class="chip active" data-filtro="TODOS">Todos</button>
+          <button class="chip" data-filtro="PENDIENTE">Pendientes</button>
+          <button class="chip" data-filtro="APROBADO">Aprobados</button>
+          <button class="chip" data-filtro="RECHAZADO">Rechazados</button>
+        </div>
+        <ul class="list" id="lista-creditos"></ul>
+      </section>
+
+      <!-- Consola -->
+      <section class="panel console">
+        <div class="panel-head">
+          <h2>Peticiones</h2>
+          <button class="ghost small" id="btn-limpiar-log">Limpiar</button>
+        </div>
+        <p class="muted small-text">Cada llamada a la API, con su estado HTTP, tiempo y respuesta. Haz clic para ver el detalle.</p>
+        <ol class="log" id="log"></ol>
+      </section>
+    </main>
+
+    <div class="toasts" id="toasts" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

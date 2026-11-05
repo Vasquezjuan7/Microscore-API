@@ -34,7 +34,7 @@ Se aprueba con **60 puntos o más**. Ningún criterio aprueba un crédito por s�
 | GET    | `/clientes/:id`           | Ver cliente con sus créditos                  |
 | PUT    | `/clientes/:id`           | Actualizar cliente                            |
 | DELETE | `/clientes/:id`           | Eliminar cliente (solo si no tiene créditos)  |
-| POST   | `/creditos/solicitar`     | Crear solicitud (queda `PENDIENTE`)           |
+| POST   | `/creditos/solicitar`     | Crear solicitud (queda `PENDIENTE`; 409 si el cliente ya tiene una pendiente) |
 | GET    | `/creditos`               | Listar solicitudes                            |
 | GET    | `/creditos/:id`           | Ver solicitud                                 |
 | POST   | `/creditos/:id/evaluar`   | Evaluar solicitud → `APROBADO` / `RECHAZADO`  |
@@ -62,5 +62,11 @@ npm run start:dev     # http://localhost:3000/v1
 npm test              # tests unitarios (motor de scoring y builder)
 npm run format        # formatea el código con Prettier
 ```
+
+### Panel web de pruebas
+
+Con el servidor encendido, abre **http://localhost:3000/**. El panel (`public/`) permite crear, editar y
+eliminar clientes, solicitar y evaluar créditos, y muestra cada petición a la API con su código HTTP,
+tiempo y respuesta JSON. Lo sirve el propio NestJS, así que no necesita instalación ni CORS.
 
 Variables de entorno opcionales: `PORT` (por defecto 3000) y `DB_PATH` (por defecto `microscore.sqlite`).
