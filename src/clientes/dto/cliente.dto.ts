@@ -3,16 +3,16 @@ import { Transform } from 'class-transformer';
 
 export class ClienteDto {
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'El nombre debe ser un texto' })
+  @IsNotEmpty({ message: 'El nombre es obligatorio' })
   nombre: string;
 
   // Se guarda en minúsculas para que "Ana@x.com" y "ana@x.com" sean el mismo cliente
   @Transform(({ value }) => (typeof value === 'string' ? value.trim().toLowerCase() : value))
-  @IsEmail()
+  @IsEmail({}, { message: 'El email no es válido' })
   email: string;
 
-  @IsInt()
-  @Min(18, { message: 'El cliente debe ser mayor de 18 años.' })
+  @IsInt({ message: 'La edad debe ser un número entero' })
+  @Min(18, { message: 'El cliente debe ser mayor de 18 años' })
   edad: number;
 }
