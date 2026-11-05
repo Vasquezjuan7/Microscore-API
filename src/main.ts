@@ -9,6 +9,8 @@ async function bootstrap() {
   // Valida los DTOs y rechaza campos que no estén declarados en ellos
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true, forbidNonWhitelisted: true }));
   app.setGlobalPrefix('v1');
+  // Cierra la conexión a la base de datos limpiamente al recibir SIGTERM (docker stop)
+  app.enableShutdownHooks();
 
   // Panel web de pruebas (carpeta public/) en http://localhost:3000/
   app.useStaticAssets(join(__dirname, '..', 'public'));
