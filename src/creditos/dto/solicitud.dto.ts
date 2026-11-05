@@ -4,7 +4,7 @@ export class SolicitudDto {
   @IsUUID()
   idCliente: string;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 2 })
   @Min(1)
   monto: number;
 
@@ -13,7 +13,7 @@ export class SolicitudDto {
   proposito: string;
 
   // Ingresos mensuales
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   ingresos: number;
 }

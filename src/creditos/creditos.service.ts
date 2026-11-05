@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 import { SolicitudDto } from './dto/solicitud.dto';
 import { SolicitudBuilder } from './builders/solicitud.builder';
 import { MotorScoringService } from './motor-scoring.service';
@@ -32,7 +32,15 @@ export class CreditosService {
       .setIngresos(dto.ingresos)
       .build();
 
-    return this.creditosRepo.save(solicitud);
+    try {
+      return await this.creditosRepo.save(solicitud);
+    } catch (error) {
+      // Dos solicitudes simultáneas: la segunda choca con el índice único de pendientes
+      if (error instanceof QueryFailedError && /UNIQUE/i.test(error.message)) {
+        throw new ConflictException('El cliente ya tiene una solicitud pendiente de evaluación');
+      }
+      throw error;
+    }
   }
 
   findAll(): Promise<Credito[]> {
