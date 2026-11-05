@@ -73,9 +73,12 @@ export class CreditosService {
       throw new ConflictException(`La solicitud ya fue evaluada (${credito.estado})`);
     }
 
-    const { puntaje, estado } = this.motorScoring.evaluarSolicitud(credito);
+    const { puntaje, estado, desglose } = this.motorScoring.evaluarSolicitud(credito);
     // Solo actualiza si sigue PENDIENTE: si otra petición la evaluó entre medias, no se pisa
-    const resultado = await this.creditosRepo.update({ id_solicitud: id, estado: 'PENDIENTE' }, { puntaje, estado });
+    const resultado = await this.creditosRepo.update(
+      { id_solicitud: id, estado: 'PENDIENTE' },
+      { puntaje, estado, desglose },
+    );
     if (!resultado.affected) {
       throw new ConflictException('La solicitud ya fue evaluada por otra petición');
     }
