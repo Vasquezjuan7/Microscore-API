@@ -80,4 +80,19 @@ describe('ClientesService', () => {
       await expect(service.update(ID, dto)).rejects.toThrow(NotFoundException);
     });
   });
+
+  describe('remove', () => {
+    it('elimina un cliente sin créditos', async () => {
+      const cliente = crearCliente();
+      repo.findOne.mockResolvedValue(cliente);
+      await service.remove(ID);
+      expect(repo.remove).toHaveBeenCalledWith(cliente);
+    });
+
+    it('no elimina un cliente con créditos registrados', async () => {
+      repo.findOne.mockResolvedValue(crearCliente({ creditos: [new Credito()] }));
+      await expect(service.remove(ID)).rejects.toThrow(ConflictException);
+      expect(repo.remove).not.toHaveBeenCalled();
+    });
+  });
 });
