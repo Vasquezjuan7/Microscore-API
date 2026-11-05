@@ -2,6 +2,8 @@ import { Logger } from '@nestjs/common';
 import { ClientesService } from '../clientes/clientes.service';
 import { CreditosService } from '../creditos/creditos.service';
 import { Cliente } from '../clientes/entities/cliente.entity';
+import { Credito } from '../creditos/entities/credito.entity';
+import { SolicitudDto } from '../creditos/dto/solicitud.dto';
 import { CLIENTES_SEMILLA, cargarSemilla } from './semilla';
 
 describe('cargarSemilla', () => {
@@ -17,7 +19,9 @@ describe('cargarSemilla', () => {
       create: jest.fn(async (dto) => Object.assign(new Cliente(), dto, { id_cliente: `cliente-${++n}` })),
     };
     creditos = {
-      crearSolicitud: jest.fn(async () => ({ id_solicitud: `solicitud-${++n}` }) as never),
+      crearSolicitud: jest.fn(async (dto: SolicitudDto) =>
+        Object.assign(new Credito(), dto, { id_solicitud: `solicitud-${++n}` }),
+      ),
       evaluarCredito: jest.fn(),
     };
   });
