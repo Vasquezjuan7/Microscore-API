@@ -1,5 +1,5 @@
 import { ConflictException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 import { CreditosService } from './creditos.service';
 import { MotorScoringService } from './motor-scoring.service';
 import { Credito } from './entities/credito.entity';
@@ -45,6 +45,14 @@ describe('CreditosService', () => {
     clientes.findOne.mockResolvedValue(crearCliente([{ estado: 'APROBADO' }, { estado: 'RECHAZADO' }]));
     repo.save.mockImplementation(async (c) => c as Credito);
     await expect(service.crearSolicitud(dto)).resolves.toMatchObject({ estado: 'PENDIENTE' });
+  });
+
+  it('devuelve 409 si dos solicitudes simultáneas chocan con el índice de pendientes', async () => {
+    clientes.findOne.mockResolvedValue(crearCliente());
+    repo.save.mockRejectedValue(
+      new QueryFailedError('INSERT', [], new Error('SQLITE_CONSTRAINT: UNIQUE constraint failed: creditos.id_cliente')),
+    );
+    await expect(service.crearSolicitud(dto)).rejects.toThrow(ConflictException);
   });
 
   it('solo actualiza si la solicitud sigue PENDIENTE y devuelve el estado guardado', async () => {

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, Index } from 'typeorm';
 import { Cliente } from '../../clientes/entities/cliente.entity';
 
 export type EstadoCredito = 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
@@ -10,6 +10,9 @@ const decimalANumero = {
 };
 
 @Entity('creditos')
+// Garantiza en la base de datos que un cliente tenga como máximo una solicitud PENDIENTE,
+// aunque lleguen dos peticiones a la vez.
+@Index('UQ_creditos_pendiente_por_cliente', ['id_cliente'], { unique: true, where: "estado = 'PENDIENTE'" })
 export class Credito {
   @PrimaryGeneratedColumn('uuid')
   id_solicitud: string;
