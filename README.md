@@ -82,6 +82,12 @@ basta con cambiar el valor ahí.
 | POST   | `/creditos/:id/evaluar`   | Evaluar solicitud → `APROBADO` / `RECHAZADO`  |
 | GET    | `/health`                 | Estado de la API y de la base de datos        |
 
+Los errores de validación responden 400 con los mensajes en español:
+
+```json
+{ "message": ["El email no es válido", "El cliente debe ser mayor de 18 años"], "error": "Bad Request", "statusCode": 400 }
+```
+
 Ejemplo:
 
 ```bash
