@@ -60,4 +60,24 @@ describe('ClientesService', () => {
       await expect(service.findOne(ID)).rejects.toThrow(NotFoundException);
     });
   });
+
+  describe('update', () => {
+    it('permite conservar el mismo email sin validarlo de nuevo', async () => {
+      repo.findOne.mockResolvedValue(crearCliente());
+      await expect(service.update(ID, { ...dto, nombre: 'Ana María' })).resolves.toMatchObject({ nombre: 'Ana María' });
+      expect(repo.exists).not.toHaveBeenCalled();
+    });
+
+    it('rechaza cambiar a un email que ya usa otro cliente', async () => {
+      repo.findOne.mockResolvedValue(crearCliente());
+      repo.exists.mockResolvedValue(true);
+      await expect(service.update(ID, { ...dto, email: 'otro@correo.com' })).rejects.toThrow(ConflictException);
+      expect(repo.save).not.toHaveBeenCalled();
+    });
+
+    it('lanza 404 si el cliente no existe', async () => {
+      repo.findOne.mockResolvedValue(null);
+      await expect(service.update(ID, dto)).rejects.toThrow(NotFoundException);
+    });
+  });
 });
