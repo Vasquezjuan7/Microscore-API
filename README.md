@@ -137,8 +137,9 @@ Ver `.env.example`.
 
 ## Flujo de trabajo con Git
 
-- `main`: versión estable; solo recibe merges desde `develop`.
-- `develop`: rama de integración.
-- `feature/*`, `fix/*`, `docs/*`: una rama por cambio, creada desde `develop` y fusionada con `--no-ff`.
+- `develop`: rama por defecto e integración. Cada cambio entra por Pull Request.
+- `main`: versión estable; recibe `develop` al cerrar una versión.
+- `feature/*`, `fix/*`, `docs/*`, `chore/*`: una rama por cambio, creada desde `develop`.
 
 Los commits siguen [Conventional Commits](https://www.conventionalcommits.org/es/) (`feat:`, `fix:`, `docs:`…).
+Detalles en [CONTRIBUTING.md](CONTRIBUTING.md).
