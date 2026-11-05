@@ -38,6 +38,9 @@ jobs:
       - name: Pruebas unitarias
         run: npm test
 
+      - name: Pruebas e2e
+        run: npm run test:e2e
+
   docker:
     name: Imagen Docker
     runs-on: ubuntu-latest
