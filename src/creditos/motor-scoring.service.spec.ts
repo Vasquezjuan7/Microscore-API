@@ -51,4 +51,14 @@ describe('MotorScoringService', () => {
     const solicitud = crearSolicitud({ ingresos: 300, proposito: 'negocio', cliente: clienteConCredito('RECHAZADO') });
     expect(motor.evaluarSolicitud(solicitud)).toMatchObject({ puntaje: 55, estado: 'RECHAZADO' });
   });
+
+  it('devuelve el puntaje de cada criterio en el desglose', () => {
+    const solicitud = crearSolicitud({ ingresos: 300, proposito: 'negocio', cliente: clienteConCredito('APROBADO') });
+    expect(motor.evaluarSolicitud(solicitud).desglose).toEqual({ ingresos: 25, proposito: 30, historial: 20 });
+  });
+
+  it('el puntaje total es la suma del desglose', () => {
+    const { puntaje, desglose } = motor.evaluarSolicitud(crearSolicitud({ ingresos: 600, proposito: 'viaje' }));
+    expect(puntaje).toBe(Object.values(desglose).reduce((a, b) => a + b, 0));
+  });
 });
