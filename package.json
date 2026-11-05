@@ -10,7 +10,10 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "test": "jest"
+    "test": "jest",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f api"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
