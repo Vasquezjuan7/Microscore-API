@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CreditosController } from './creditos.controller';
+import { ClienteCreditosController } from './cliente-creditos.controller';
 import { CreditosService } from './creditos.service';
 import { MotorScoringService } from './motor-scoring.service';
 import { Credito } from './entities/credito.entity';
@@ -12,7 +13,7 @@ import { EstrategiaHistorial } from './strategies/estrategia-historial';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Credito]), ClientesModule],
-  controllers: [CreditosController],
+  controllers: [CreditosController, ClienteCreditosController],
   providers: [
     CreditosService,
     MotorScoringService,
