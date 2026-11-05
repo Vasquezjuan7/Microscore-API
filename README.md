@@ -75,6 +75,9 @@ basta con cambiar el valor ahí.
 
 ## Endpoints (prefijo `/v1`)
 
+Documentación interactiva (Swagger) en **http://localhost:3000/docs**, con los esquemas de cada DTO y la
+opción de probar los endpoints desde el navegador. El JSON de OpenAPI está en `/docs-json`.
+
 | Método | Ruta                      | Descripción                                   |
 |--------|---------------------------|-----------------------------------------------|
 | POST   | `/clientes`               | Crear cliente                                 |
