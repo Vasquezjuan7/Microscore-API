@@ -2,6 +2,7 @@ import { IsString, IsEmail, IsInt, Min, IsNotEmpty } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class ClienteDto {
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
   @IsNotEmpty()
   nombre: string;
