@@ -22,6 +22,8 @@ interface Credito {
   ingresos: number;
   estado: EstadoCredito;
   puntaje: number | null;
+  // Puntos por criterio; null mientras la solicitud está PENDIENTE
+  desglose: Record<string, number> | null;
   fecha_solicitud: string;
 }
 
