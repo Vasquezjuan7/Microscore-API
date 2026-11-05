@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryFailedError, Repository } from 'typeorm';
-import { ClienteDto } from './dto/cliente.dto';
+import { ActualizarClienteDto, ClienteDto } from './dto/cliente.dto';
 import { Cliente } from './entities/cliente.entity';
 
 @Injectable()
@@ -30,9 +30,10 @@ export class ClientesService {
     return cliente;
   }
 
-  async update(id: string, dto: ClienteDto): Promise<Cliente> {
+  // Sirve para PUT (todos los campos) y PATCH (solo los enviados)
+  async update(id: string, dto: ActualizarClienteDto): Promise<Cliente> {
     const cliente = await this.findOne(id);
-    if (dto.email !== cliente.email) await this.validarEmailDisponible(dto.email);
+    if (dto.email !== undefined && dto.email !== cliente.email) await this.validarEmailDisponible(dto.email);
     Object.assign(cliente, dto);
     return this.guardar(cliente);
   }
