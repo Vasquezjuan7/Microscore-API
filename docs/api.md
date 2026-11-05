@@ -86,3 +86,72 @@ Responde `204`. Si el cliente tiene créditos registrados responde `409` y no se
 ### GET /clientes/{id}/creditos
 
 Solicitudes del cliente ordenadas de la más reciente a la más antigua. `404` si el cliente no existe.
+
+## Créditos
+
+### POST /creditos/solicitar
+
+| Campo       | Tipo   | Reglas                                   |
+|-------------|--------|------------------------------------------|
+| `idCliente` | UUID   | Cliente existente                         |
+| `monto`     | número | Mínimo 1, máximo 2 decimales             |
+| `proposito` | string | Obligatorio                              |
+| `ingresos`  | número | Ingresos mensuales, mínimo 0, máximo 2 decimales |
+
+```bash
+curl -X POST localhost:3000/v1/creditos/solicitar -H 'Content-Type: application/json' \
+  -d '{"idCliente":"21e085a0-faac-4bdb-914b-76cc5096299c","monto":1000,"proposito":"negocio","ingresos":600}'
+```
+
+Respuesta `201` (queda `PENDIENTE`, sin puntaje):
+
+```json
+{
+  "estado": "PENDIENTE",
+  "id_cliente": "21e085a0-faac-4bdb-914b-76cc5096299c",
+  "monto": 1000,
+  "proposito": "negocio",
+  "ingresos": 600,
+  "puntaje": null,
+  "desglose": null,
+  "id_solicitud": "ee847b75-a522-4a1e-9735-fddf9274a55a",
+  "fecha_solicitud": "2026-11-05T15:48:43.731Z"
+}
+```
+
+Errores: `400` datos inválidos, `404` cliente inexistente, `409` el cliente ya tiene una solicitud pendiente.
+
+### POST /creditos/{id}/evaluar
+
+Aplica las reglas de scoring y guarda el resultado. Respuesta `200`:
+
+```json
+{
+  "id_solicitud": "ee847b75-a522-4a1e-9735-fddf9274a55a",
+  "estado": "APROBADO",
+  "puntaje": 80,
+  "desglose": { "ingresos": 50, "proposito": 30, "historial": 0 },
+  "cliente": { "id_cliente": "21e085a0-faac-4bdb-914b-76cc5096299c", "nombre": "Ana Gómez", "creditos": ["…"] }
+}
+```
+
+Errores: `404` solicitud inexistente, `409` la solicitud ya fue evaluada.
+
+### GET /creditos
+
+Lista las solicitudes de la más reciente a la más antigua. Filtro opcional `?estado=PENDIENTE|APROBADO|RECHAZADO`
+(otro valor responde `400`).
+
+## Reglas de scoring
+
+| Criterio    | Condición                                              | Puntos  |
+|-------------|--------------------------------------------------------|---------|
+| `ingresos`  | ingresos mensuales ≥ 50% del monto / ≥ 25% del monto   | 50 / 25 |
+| `proposito` | negocio, educación, emprendimiento o inversión (sin importar tildes ni mayúsculas) | 30 |
+| `historial` | el cliente tiene algún crédito previo aprobado          | 20      |
+
+Se aprueba con 60 puntos o más. Los valores están en `src/common/constantes.ts`.
+
+## Health
+
+`GET /health` responde `{"status":"ok","uptime":42}` si la base de datos responde. Lo usa el `HEALTHCHECK` de Docker.
