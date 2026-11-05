@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, Index } from 'typeorm';
 import { Cliente } from '../../clientes/entities/cliente.entity';
+import { FECHA_CREACION_CON_MILISEGUNDOS } from '../../common/columnas';
 import { ESTADOS_CREDITO } from '../../common/constantes';
 
 export type EstadoCredito = (typeof ESTADOS_CREDITO)[number];
@@ -41,7 +42,7 @@ export class Credito {
   @Column('simple-json', { nullable: true })
   desglose: Record<string, number> | null;
 
-  @CreateDateColumn()
+  @CreateDateColumn(FECHA_CREACION_CON_MILISEGUNDOS)
   fecha_solicitud: Date;
 
   @ManyToOne(() => Cliente, (cliente) => cliente.creditos)
