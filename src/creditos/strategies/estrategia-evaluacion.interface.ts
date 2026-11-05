@@ -4,5 +4,7 @@ import { Credito } from '../entities/credito.entity';
 export const ESTRATEGIAS_EVALUACION = 'ESTRATEGIAS_EVALUACION';
 
 export interface IEstrategiaEvaluacion {
+  // Identificador del criterio en el desglose del puntaje (p. ej. 'ingresos')
+  readonly nombre: string;
   evaluar(solicitud: Credito): number;
 }

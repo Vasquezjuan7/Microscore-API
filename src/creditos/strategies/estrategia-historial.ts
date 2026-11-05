@@ -5,6 +5,8 @@ import { PUNTOS_HISTORIAL_APROBADO } from '../../common/constantes';
 // Premia a clientes con créditos aprobados previamente en MicroScore.
 // No penaliza a clientes nuevos: el sistema está pensado para personas sin historial bancario.
 export class EstrategiaHistorial implements IEstrategiaEvaluacion {
+  readonly nombre = 'historial';
+
   evaluar(solicitud: Credito): number {
     const creditosPrevios = solicitud.cliente?.creditos ?? [];
     const aprobados = creditosPrevios.filter(
