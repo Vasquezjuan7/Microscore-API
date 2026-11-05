@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from 'typeorm';
 import { Credito } from '../../creditos/entities/credito.entity';
+import { FECHA_CREACION_CON_MILISEGUNDOS } from '../../common/columnas';
 
 @Entity('clientes')
 export class Cliente {
@@ -15,7 +16,7 @@ export class Cliente {
   @Column('int')
   edad: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn(FECHA_CREACION_CON_MILISEGUNDOS)
   fecha_registro: Date;
 
   @OneToMany(() => Credito, (credito) => credito.cliente)
