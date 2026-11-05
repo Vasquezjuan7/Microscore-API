@@ -74,7 +74,8 @@ basta con cambiar el valor ahí.
 | POST   | `/clientes`               | Crear cliente                                 |
 | GET    | `/clientes`               | Listar clientes                               |
 | GET    | `/clientes/:id`           | Ver cliente con sus créditos                  |
-| PUT    | `/clientes/:id`           | Actualizar cliente                            |
+| PUT    | `/clientes/:id`           | Actualizar cliente (todos los campos)         |
+| PATCH  | `/clientes/:id`           | Actualizar solo los campos enviados           |
 | DELETE | `/clientes/:id`           | Eliminar cliente (solo si no tiene créditos)  |
 | POST   | `/creditos/solicitar`     | Crear solicitud (queda `PENDIENTE`; 409 si el cliente ya tiene una pendiente) |
 | GET    | `/creditos`               | Listar solicitudes                            |
