@@ -4,7 +4,7 @@ Sistema de evaluación de microcréditos para emprendedores sin historial bancar
 
 ## Arquitectura y Tecnologías
 
-Proyecto en **NestJS** con arquitectura modular por características, **TypeORM** y **SQLite**.
+Proyecto **100% TypeScript** sobre Node.js, en **NestJS** con arquitectura modular por características, **TypeORM** y **SQLite**.
 
 1. **ClientesModule (`src/clientes`)**: CRUD de clientes persistido en base de datos.
 2. **CreditosModule (`src/creditos`)**: solicitud y evaluación de créditos. Usa dos patrones de diseño:
@@ -43,7 +43,8 @@ src/
     │   └── estrategia-historial.ts  # Crédito previo aprobado: 20 pts
     ├── dto/solicitud.dto.ts     # Validaciones: UUID, monto ≥ 1, máx. 2 decimales
     └── entities/credito.entity.ts   # Índice único: una sola solicitud PENDIENTE por cliente
-public/                          # Panel web de pruebas (HTML/CSS/JS sin dependencias)
+web/app.ts                       # Lógica del panel web en TypeScript (se compila a public/app.js)
+public/                          # HTML y CSS del panel web de pruebas
 Dockerfile · docker-compose.yml  # Contenerización
 ```
 
@@ -120,7 +121,9 @@ es multi-etapa, corre con un usuario sin privilegios y tiene `HEALTHCHECK` contr
 
 Con el servidor encendido, abre **http://localhost:3000/**. El panel (`public/`) permite crear, editar y
 eliminar clientes, solicitar y evaluar créditos, y muestra cada petición a la API con su código HTTP,
-tiempo y respuesta JSON. Lo sirve el propio NestJS, así que no necesita instalación ni CORS.
+tiempo y respuesta JSON. Lo sirve el propio NestJS, así que no necesita instalación ni CORS. Su lógica está
+en `web/app.ts` y se compila automáticamente a `public/app.js` con `npm run build`, `npm start` o
+`npm run start:dev` (también a mano con `npm run build:web`).
 
 ### Variables de entorno
 
