@@ -1,5 +1,7 @@
 # MicroScore API
 
+[![CI](https://github.com/Vasquezjuan7/Microscore-API/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/Vasquezjuan7/Microscore-API/actions/workflows/ci.yml)
+
 Sistema de evaluación de microcréditos para emprendedores sin historial bancario.
 
 ## Arquitectura y Tecnologías
@@ -146,3 +148,6 @@ por defecto). Para crearlo: `cp .env.example .env`. Sus nombres están tipados e
 
 Los commits siguen [Conventional Commits](https://www.conventionalcommits.org/es/) (`feat:`, `fix:`, `docs:`…).
 Detalles en [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Cada push y PR a `develop` ejecuta el workflow de CI (`.github/workflows/ci.yml`): lint, formato, build,
+pruebas unitarias y construcción de la imagen Docker con una prueba de `/v1/health`.
