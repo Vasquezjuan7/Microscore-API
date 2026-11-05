@@ -25,7 +25,11 @@ describe('CreditosService', () => {
   beforeEach(() => {
     repo = { save: jest.fn(), findOne: jest.fn(), update: jest.fn(), find: jest.fn() };
     clientes = { findOne: jest.fn() };
-    motor = { evaluarSolicitud: jest.fn().mockReturnValue({ puntaje: 80, estado: 'APROBADO' }) };
+    motor = {
+      evaluarSolicitud: jest
+        .fn()
+        .mockReturnValue({ puntaje: 80, estado: 'APROBADO', desglose: { ingresos: 50, proposito: 30, historial: 0 } }),
+    };
     service = new CreditosService(
       repo as unknown as Repository<Credito>,
       clientes as unknown as ClientesService,
@@ -64,7 +68,7 @@ describe('CreditosService', () => {
     await expect(service.evaluarCredito(ID_SOLICITUD)).resolves.toBe(evaluada);
     expect(repo.update).toHaveBeenCalledWith(
       { id_solicitud: ID_SOLICITUD, estado: 'PENDIENTE' },
-      { puntaje: 80, estado: 'APROBADO' },
+      { puntaje: 80, estado: 'APROBADO', desglose: { ingresos: 50, proposito: 30, historial: 0 } },
     );
   });
 
