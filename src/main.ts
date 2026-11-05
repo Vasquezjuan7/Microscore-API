@@ -19,6 +19,10 @@ async function bootstrap() {
 
   const config = app.get<ConfigService<Env, true>>(ConfigService);
   const port = config.get('PORT', ENV_POR_DEFECTO.PORT, { infer: true });
+
+  // Permite consumir la API desde un frontend en otro dominio
+  const origen = config.get('CORS_ORIGIN', ENV_POR_DEFECTO.CORS_ORIGIN, { infer: true });
+  app.enableCors({ origin: origen === '*' ? true : origen.split(',').map((o) => o.trim()) });
   await app.listen(port);
   console.log(`🚀 API en http://localhost:${port}/v1 · Panel en http://localhost:${port}/`);
 }
