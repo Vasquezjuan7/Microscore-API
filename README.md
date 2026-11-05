@@ -16,7 +16,9 @@ Proyecto **100% TypeScript** sobre Node.js, con arquitectura modular por caracte
      añadir una regla nueva basta con crear la clase y agregarla a esa lista.
 3. **Errores de base de datos**: el filtro global `QueryFailedFilter` (`src/common/filtros`) responde 409
    ante violaciones de restricciones (`UNIQUE`, claves foráneas) y 500 sin detalles internos en otros casos.
-4. **Base de datos**: las tablas `clientes` y `creditos` se crean automáticamente a partir de los
+4. **Log de peticiones**: `LoggingInterceptor` (`src/common/interceptores`) escribe en consola cada
+   petición, por ejemplo `POST /v1/creditos/solicitar 201 - 12ms`.
+5. **Base de datos**: las tablas `clientes` y `creditos` se crean automáticamente a partir de los
    entities (`synchronize`) en el archivo `microscore.sqlite`.
 
 ## Estructura del proyecto
