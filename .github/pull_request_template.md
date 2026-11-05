@@ -11,7 +11,7 @@
 ## Checklist
 - [ ] La rama sale de `develop` actualizada
 - [ ] Commits con la convencion `tipo: descripcion`
-- [ ] `npm run build` y `npm test` pasan
+- [ ] `npm run lint`, `npm run build` y `npm test` pasan
 - [ ] Documentacion actualizada (README / docs)
 
 Rama: `feature/<nombre>`
