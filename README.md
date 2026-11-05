@@ -64,6 +64,12 @@ Dockerfile · docker-compose.yml  # Contenerización
 
 Se aprueba con **60 puntos o más**. Ningún criterio aprueba un crédito por sí solo.
 
+Al evaluar, la solicitud guarda el `puntaje` total y su `desglose` por criterio:
+
+```json
+{ "estado": "RECHAZADO", "puntaje": 55, "desglose": { "ingresos": 25, "proposito": 30, "historial": 0 } }
+```
+
 Los puntajes, tramos y el umbral están definidos en `src/common/constantes.ts`: para ajustar una regla
 basta con cambiar el valor ahí.
 
@@ -139,7 +145,7 @@ es multi-etapa, corre con un usuario sin privilegios y tiene `HEALTHCHECK` contr
 ### Panel web de pruebas
 
 Con el servidor encendido, abre **http://localhost:3000/**. El panel (`public/`) permite crear, editar y
-eliminar clientes, solicitar y evaluar créditos, y muestra cada petición a la API con su código HTTP,
+eliminar clientes, solicitar y evaluar créditos (con el desglose de puntos de cada criterio), y muestra cada petición a la API con su código HTTP,
 tiempo y respuesta JSON. Lo sirve el propio NestJS, así que no necesita instalación ni CORS. Su lógica está
 en `web/app.ts` y se compila automáticamente a `public/app.js` con `npm run build`, `npm start` o
 `npm run start:dev` (también a mano con `npm run build:web`).

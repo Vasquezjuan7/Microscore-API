@@ -24,31 +24,41 @@ describe('MotorScoringService', () => {
 
   it('aprueba con buenos ingresos y propósito productivo', () => {
     const resultado = motor.evaluarSolicitud(crearSolicitud({ ingresos: 600, proposito: 'Negocio' }));
-    expect(resultado).toEqual({ puntaje: 80, estado: 'APROBADO' });
+    expect(resultado).toMatchObject({ puntaje: 80, estado: 'APROBADO' });
   });
 
   it('rechaza si solo cumple los ingresos', () => {
     const resultado = motor.evaluarSolicitud(crearSolicitud({ ingresos: 600, proposito: 'vacaciones' }));
-    expect(resultado).toEqual({ puntaje: 50, estado: 'RECHAZADO' });
+    expect(resultado).toMatchObject({ puntaje: 50, estado: 'RECHAZADO' });
   });
 
   it('rechaza si solo cumple el propósito', () => {
     const resultado = motor.evaluarSolicitud(crearSolicitud({ ingresos: 100, proposito: 'educacion' }));
-    expect(resultado).toEqual({ puntaje: 30, estado: 'RECHAZADO' });
+    expect(resultado).toMatchObject({ puntaje: 30, estado: 'RECHAZADO' });
   });
 
   it.each(['Educación', 'INVERSIÓN', ' educacion '])('reconoce el propósito %p con o sin tilde', (proposito) => {
     const resultado = motor.evaluarSolicitud(crearSolicitud({ ingresos: 600, proposito }));
-    expect(resultado).toEqual({ puntaje: 80, estado: 'APROBADO' });
+    expect(resultado).toMatchObject({ puntaje: 80, estado: 'APROBADO' });
   });
 
   it('el historial aprobado compensa ingresos medios', () => {
     const solicitud = crearSolicitud({ ingresos: 300, proposito: 'negocio', cliente: clienteConCredito('APROBADO') });
-    expect(motor.evaluarSolicitud(solicitud)).toEqual({ puntaje: 75, estado: 'APROBADO' });
+    expect(motor.evaluarSolicitud(solicitud)).toMatchObject({ puntaje: 75, estado: 'APROBADO' });
   });
 
   it('un crédito previo rechazado no suma historial', () => {
     const solicitud = crearSolicitud({ ingresos: 300, proposito: 'negocio', cliente: clienteConCredito('RECHAZADO') });
-    expect(motor.evaluarSolicitud(solicitud)).toEqual({ puntaje: 55, estado: 'RECHAZADO' });
+    expect(motor.evaluarSolicitud(solicitud)).toMatchObject({ puntaje: 55, estado: 'RECHAZADO' });
+  });
+
+  it('devuelve el puntaje de cada criterio en el desglose', () => {
+    const solicitud = crearSolicitud({ ingresos: 300, proposito: 'negocio', cliente: clienteConCredito('APROBADO') });
+    expect(motor.evaluarSolicitud(solicitud).desglose).toEqual({ ingresos: 25, proposito: 30, historial: 20 });
+  });
+
+  it('el puntaje total es la suma del desglose', () => {
+    const { puntaje, desglose } = motor.evaluarSolicitud(crearSolicitud({ ingresos: 600, proposito: 'viaje' }));
+    expect(puntaje).toBe(Object.values(desglose).reduce((a, b) => a + b, 0));
   });
 });

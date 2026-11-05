@@ -37,6 +37,10 @@ export class Credito {
   @Column('int', { nullable: true })
   puntaje: number;
 
+  // Puntos de cada criterio al evaluar (null mientras la solicitud está PENDIENTE)
+  @Column('simple-json', { nullable: true })
+  desglose: Record<string, number> | null;
+
   @CreateDateColumn()
   fecha_solicitud: Date;
 
