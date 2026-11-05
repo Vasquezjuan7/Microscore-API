@@ -5,11 +5,17 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { Env, ENV_POR_DEFECTO } from './env.model';
+import { QueryFailedFilter } from './common/filtros/query-failed.filter';
+import { LoggingInterceptor } from './common/interceptores/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   // Valida los DTOs y rechaza campos que no estén declarados en ellos
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true, forbidNonWhitelisted: true }));
+  // Traduce las violaciones de restricciones de la base de datos a 409
+  app.useGlobalFilters(new QueryFailedFilter());
+  // Registra método, ruta, estado y duración de cada petición
+  app.useGlobalInterceptors(new LoggingInterceptor());
   app.setGlobalPrefix('v1');
   // Cierra la conexión a la base de datos limpiamente al recibir SIGTERM (docker stop)
   app.enableShutdownHooks();
