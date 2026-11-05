@@ -64,6 +64,12 @@ Dockerfile · docker-compose.yml  # Contenerización
 
 Se aprueba con **60 puntos o más**. Ningún criterio aprueba un crédito por sí solo.
 
+Al evaluar, la solicitud guarda el `puntaje` total y su `desglose` por criterio:
+
+```json
+{ "estado": "RECHAZADO", "puntaje": 55, "desglose": { "ingresos": 25, "proposito": 30, "historial": 0 } }
+```
+
 Los puntajes, tramos y el umbral están definidos en `src/common/constantes.ts`: para ajustar una regla
 basta con cambiar el valor ahí.
 
