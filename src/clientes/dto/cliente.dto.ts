@@ -1,5 +1,6 @@
 import { IsString, IsEmail, IsInt, Min, Max, IsNotEmpty, MaxLength } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { PartialType } from '@nestjs/mapped-types';
 
 export class ClienteDto {
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
@@ -19,3 +20,6 @@ export class ClienteDto {
   @Max(120, { message: 'La edad no es válida' })
   edad: number;
 }
+
+// Para PATCH: todos los campos son opcionales, pero los que se envían se validan igual
+export class ActualizarClienteDto extends PartialType(ClienteDto) {}
