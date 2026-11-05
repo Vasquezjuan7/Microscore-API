@@ -1,20 +1,32 @@
 import { IsString, IsEmail, IsInt, Min, Max, IsNotEmpty, MaxLength } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { PartialType } from '@nestjs/mapped-types';
+// PartialType de @nestjs/swagger conserva también la documentación de los campos
+import { PartialType } from '@nestjs/swagger';
 
 export class ClienteDto {
+  /**
+   * Nombre completo del cliente
+   * @example "Ana Gómez"
+   */
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString({ message: 'El nombre debe ser un texto' })
   @IsNotEmpty({ message: 'El nombre es obligatorio' })
   @MaxLength(100, { message: 'El nombre no puede superar los 100 caracteres' })
   nombre: string;
 
-  // Se guarda en minúsculas para que "Ana@x.com" y "ana@x.com" sean el mismo cliente
+  /**
+   * Se guarda en minúsculas para que "Ana@x.com" y "ana@x.com" sean el mismo cliente
+   * @example "ana@correo.com"
+   */
   @Transform(({ value }) => (typeof value === 'string' ? value.trim().toLowerCase() : value))
   @IsEmail({}, { message: 'El email no es válido' })
   @MaxLength(150, { message: 'El email no puede superar los 150 caracteres' })
   email: string;
 
+  /**
+   * Edad en años (mínimo 18)
+   * @example 30
+   */
   @IsInt({ message: 'La edad debe ser un número entero' })
   @Min(18, { message: 'El cliente debe ser mayor de 18 años' })
   @Max(120, { message: 'La edad no es válida' })
