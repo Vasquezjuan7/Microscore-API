@@ -9,6 +9,8 @@ import {
 
 // Capacidad de pago: compara los ingresos mensuales con el monto solicitado
 export class EstrategiaIngresos implements IEstrategiaEvaluacion {
+  readonly nombre = 'ingresos';
+
   evaluar(solicitud: Credito): number {
     const ratio = solicitud.ingresos / solicitud.monto;
     if (ratio >= INGRESOS_RATIO_ALTO) return PUNTOS_INGRESOS_ALTO;
