@@ -1,5 +1,6 @@
 node_modules/
 dist/
+coverage/
 # Generado desde web/app.ts con npm run build:web
 public/app.js
 .env
