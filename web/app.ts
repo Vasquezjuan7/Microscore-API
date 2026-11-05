@@ -37,6 +37,25 @@ interface EstadoPanel {
 const API = '/v1';
 const UMBRAL = 60;
 
+// Etiquetas legibles de cada criterio del motor de scoring
+const CRITERIOS: Record<string, string> = { ingresos: 'Ingresos', proposito: 'Propósito', historial: 'Historial' };
+
+function pintarDesglose(desglose: Record<string, number> | null): HTMLElement | null {
+  if (!desglose) return null;
+  return el(
+    'ul',
+    { class: 'desglose' },
+    Object.entries(desglose).map(([criterio, puntos]) =>
+      el(
+        'li',
+        { class: puntos > 0 ? 'suma' : 'cero' },
+        `${CRITERIOS[criterio] ?? criterio} `,
+        el('b', {}, `+${puntos}`),
+      ),
+    ),
+  );
+}
+
 const estado: EstadoPanel = { clientes: [], creditos: [], filtro: 'TODOS', editandoId: null };
 const $ = <T extends HTMLElement = HTMLElement>(sel: string): T => document.querySelector<T>(sel);
 
@@ -277,6 +296,7 @@ function pintarCreditos(): void {
               el('div', { class: 'score-threshold' }),
             ),
             el('b', {}, `${cr.puntaje ?? 0} / 100`),
+            pintarDesglose(cr.desglose),
           );
 
     lista.append(
