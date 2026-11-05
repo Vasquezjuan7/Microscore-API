@@ -189,4 +189,4 @@ Los commits siguen [Conventional Commits](https://www.conventionalcommits.org/es
 Detalles en [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Cada push y PR a `develop` ejecuta el workflow de CI (`.github/workflows/ci.yml`): lint, formato, build,
-pruebas unitarias y construcción de la imagen Docker con una prueba de `/v1/health`.
+pruebas unitarias, pruebas e2e y construcción de la imagen Docker con una prueba de `/v1/health`.
