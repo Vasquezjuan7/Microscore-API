@@ -127,13 +127,15 @@ en `web/app.ts` y se compila automáticamente a `public/app.js` con `npm run bui
 
 ### Variables de entorno
 
-Ver `.env.example`.
+Se leen con `@nestjs/config` desde un archivo `.env` en la raíz (opcional: sin él se usan los valores
+por defecto). Para crearlo: `cp .env.example .env`. Sus nombres están tipados en `src/env.model.ts`.
 
 | Variable         | Por defecto          | Descripción                                             |
 |------------------|----------------------|---------------------------------------------------------|
 | `PORT`           | `3000`               | Puerto HTTP                                             |
 | `DB_PATH`        | `microscore.sqlite`  | Archivo de la base de datos SQLite                      |
 | `DB_SYNCHRONIZE` | `true`               | Crea/actualiza las tablas a partir de los entities      |
+| `CORS_ORIGIN`    | `*`                  | Orígenes permitidos por CORS, separados por comas       |
 
 ## Flujo de trabajo con Git
 
