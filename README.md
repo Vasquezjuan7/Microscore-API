@@ -127,7 +127,8 @@ en `web/app.ts` y se compila automáticamente a `public/app.js` con `npm run bui
 
 ### Variables de entorno
 
-Ver `.env.example`.
+Se leen con `@nestjs/config` desde un archivo `.env` en la raíz (opcional: sin él se usan los valores
+por defecto). Para crearlo: `cp .env.example .env`. Sus nombres están tipados en `src/env.model.ts`.
 
 | Variable         | Por defecto          | Descripción                                             |
 |------------------|----------------------|---------------------------------------------------------|

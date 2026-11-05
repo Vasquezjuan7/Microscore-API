@@ -1,8 +1,10 @@
 import { NestFactory } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { Env, ENV_POR_DEFECTO } from './env.model';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -15,7 +17,8 @@ async function bootstrap() {
   // Panel web de pruebas (carpeta public/) en http://localhost:3000/
   app.useStaticAssets(join(__dirname, '..', 'public'));
 
-  const port = process.env.PORT ?? 3000;
+  const config = app.get<ConfigService<Env, true>>(ConfigService);
+  const port = config.get('PORT', ENV_POR_DEFECTO.PORT, { infer: true });
   await app.listen(port);
   console.log(`🚀 API en http://localhost:${port}/v1 · Panel en http://localhost:${port}/`);
 }
