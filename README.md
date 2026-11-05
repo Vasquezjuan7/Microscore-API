@@ -79,7 +79,7 @@ basta con cambiar el valor ahí.
 | DELETE | `/clientes/:id`           | Eliminar cliente (solo si no tiene créditos)  |
 | GET    | `/clientes/:id/creditos`  | Solicitudes del cliente (más recientes primero) |
 | POST   | `/creditos/solicitar`     | Crear solicitud (queda `PENDIENTE`; 409 si el cliente ya tiene una pendiente) |
-| GET    | `/creditos`               | Listar solicitudes                            |
+| GET    | `/creditos`               | Listar solicitudes (filtro opcional `?estado=APROBADO`) |
 | GET    | `/creditos/:id`           | Ver solicitud                                 |
 | POST   | `/creditos/:id/evaluar`   | Evaluar solicitud → `APROBADO` / `RECHAZADO`  |
 | GET    | `/health`                 | Estado de la API y de la base de datos        |
