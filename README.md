@@ -96,6 +96,7 @@ curl -X POST localhost:3000/v1/creditos/<id_solicitud>/evaluar
 npm install
 npm run start:dev     # desarrollo con recarga: http://localhost:3000/v1
 npm test              # tests unitarios (motor de scoring, builder y servicio de créditos)
+npm run lint          # revisa el código con oxlint (src/, web/ y test/)
 npm run format        # formatea el código con Prettier
 
 # Producción
