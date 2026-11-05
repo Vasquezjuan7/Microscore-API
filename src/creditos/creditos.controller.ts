@@ -1,8 +1,10 @@
 import { Controller, Post, Get, Body, Param, ParseUUIDPipe, HttpCode, Query } from '@nestjs/common';
 import { CreditosService } from './creditos.service';
+import { ApiTags } from '@nestjs/swagger';
 import { SolicitudDto } from './dto/solicitud.dto';
 import { FiltroCreditosDto } from './dto/filtro-creditos.dto';
 
+@ApiTags('creditos')
 @Controller('creditos')
 export class CreditosController {
   constructor(private readonly creditosService: CreditosService) {}
