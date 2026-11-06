@@ -155,7 +155,7 @@ es multi-etapa, corre con un usuario sin privilegios y tiene `HEALTHCHECK` contr
 
 | Cliente | Solicitudes | Resultado |
 |---|---|---|
-| Ana Gómez (`ana@microscore.dev`) | negocio e inversión con buenos ingresos | Aprobada (80) y aprobada con historial (100) |
+| Ana Gómez (`ana@microscore.dev`) | negocio e inversión con buenos ingresos | Aprobada (80) y aprobada con historial (75) |
 | Luis Pérez (`luis@microscore.dev`) | vacaciones con buenos ingresos | Rechazada (50) |
 | María Torres (`maria@microscore.dev`) | educación | Pendiente, para evaluarla desde el panel |
 
