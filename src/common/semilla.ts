@@ -16,7 +16,8 @@ export const CLIENTES_SEMILLA: ClienteSemilla[] = [
     nombre: 'Ana Gómez',
     email: 'ana@microscore.dev',
     edad: 34,
-    // Buenos ingresos y propósito productivo: aprobado (80). La segunda suma historial.
+    // Buenos ingresos y propósito productivo: aprobado (80). La segunda tiene ingresos medios
+    // (25) pero suma historial (20): aprobada con 75.
     solicitudes: [
       { monto: 1000, proposito: 'negocio', ingresos: 600, evaluar: true },
       { monto: 2000, proposito: 'inversion', ingresos: 600, evaluar: true },
