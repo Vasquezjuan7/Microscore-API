@@ -29,7 +29,7 @@ async function bootstrap() {
     new DocumentBuilder()
       .setTitle('MicroScore API')
       .setDescription('Evaluación de microcréditos para emprendedores sin historial bancario')
-      .setVersion('1.2.0')
+      .setVersion('2.0.0')
       .build(),
   );
   SwaggerModule.setup('docs', app, documento);
