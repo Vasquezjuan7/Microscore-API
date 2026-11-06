@@ -188,7 +188,7 @@ por defecto). Para crearlo: `cp .env.example .env`. Sus nombres están tipados e
 - `feature/*`, `fix/*`, `docs/*`, `chore/*`: una rama por cambio, creada desde `develop`.
 
 Los commits siguen [Conventional Commits](https://www.conventionalcommits.org/es/) (`feat:`, `fix:`, `docs:`…).
-Detalles en [CONTRIBUTING.md](CONTRIBUTING.md).
+Detalles en [CONTRIBUTING.md](CONTRIBUTING.md). Historial de versiones en [CHANGELOG.md](CHANGELOG.md).
 
 Cada push y PR a `develop` ejecuta el workflow de CI (`.github/workflows/ci.yml`): lint, formato, build,
 pruebas unitarias, pruebas e2e y construcción de la imagen Docker con una prueba de `/v1/health`.
