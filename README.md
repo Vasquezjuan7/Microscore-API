@@ -75,6 +75,8 @@ basta con cambiar el valor ahí.
 
 ## Endpoints (prefijo `/v1`)
 
+Referencia completa con ejemplos de petición y respuesta: [docs/api.md](docs/api.md).
+
 Documentación interactiva (Swagger) en **http://localhost:3000/docs**, con los esquemas de cada DTO y la
 opción de probar los endpoints desde el navegador. El JSON de OpenAPI está en `/docs-json`.
 
@@ -153,7 +155,7 @@ es multi-etapa, corre con un usuario sin privilegios y tiene `HEALTHCHECK` contr
 
 | Cliente | Solicitudes | Resultado |
 |---|---|---|
-| Ana Gómez (`ana@microscore.dev`) | negocio e inversión con buenos ingresos | Aprobada (80) y aprobada con historial (100) |
+| Ana Gómez (`ana@microscore.dev`) | negocio e inversión con buenos ingresos | Aprobada (80) y aprobada con historial (75) |
 | Luis Pérez (`luis@microscore.dev`) | vacaciones con buenos ingresos | Rechazada (50) |
 | María Torres (`maria@microscore.dev`) | educación | Pendiente, para evaluarla desde el panel |
 
@@ -186,7 +188,7 @@ por defecto). Para crearlo: `cp .env.example .env`. Sus nombres están tipados e
 - `feature/*`, `fix/*`, `docs/*`, `chore/*`: una rama por cambio, creada desde `develop`.
 
 Los commits siguen [Conventional Commits](https://www.conventionalcommits.org/es/) (`feat:`, `fix:`, `docs:`…).
-Detalles en [CONTRIBUTING.md](CONTRIBUTING.md).
+Detalles en [CONTRIBUTING.md](CONTRIBUTING.md). Historial de versiones en [CHANGELOG.md](CHANGELOG.md).
 
 Cada push y PR a `develop` ejecuta el workflow de CI (`.github/workflows/ci.yml`): lint, formato, build,
 pruebas unitarias, pruebas e2e y construcción de la imagen Docker con una prueba de `/v1/health`.
