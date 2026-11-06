@@ -1,6 +1,6 @@
 {
   "name": "microscore-api",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "API de evaluación de microcréditos con NestJS",
   "scripts": {
     "build": "npm run build:web && nest build",
